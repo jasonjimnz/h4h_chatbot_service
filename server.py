@@ -34,7 +34,7 @@ def talk_action():
     text = request.form.get('text')
     user_id = request.form.get('user_id')
     question_context_tag = request.form.get('question_context_tag')
-
+    callback = None
     if (text):
         response_text = 'En proceso....'
         if question_context_tag == 'ela_question_1':
@@ -77,6 +77,7 @@ def talk_action():
                 raw_data_value=wit_response['entities']['h4h_location'],
                 debug=SERVER['debug']
             )
+            callback = 'ela_question_1'
         if 'ela_speech_status' in entities and question_context_tag == 'ela_question_1':
             graph.add_message(
                 session=graph.create_session(graph.driver),
@@ -88,6 +89,7 @@ def talk_action():
                 debug=SERVER['debug']
             )
             response_text = "Anoto que desde el diagnóstico tu estado de habla es: {user_data}".format(user_data=wit_response['entities']['ela_speech_status'][0]['value'])
+            callback = 'ela_question_2'
         if 'ela_mouth_status' in entities and question_context_tag == 'ela_question_2':
             graph.add_message(
                 session=graph.create_session(graph.driver),
@@ -100,10 +102,26 @@ def talk_action():
             )
             response_text = "Anoto que desde el diagnóstico tu estado de salivación es: {user_data}".format(
                 user_data=wit_response['entities']['ela_mouth_status'][0]['value'])
+            callback = 'goodbye'
+        if 'greetings' in entities:
+            graph.add_message(
+                session=graph.create_session(graph.driver),
+                user_id=user_id if user_id else 1,
+                message=text,
+                raw_data_type='greetings',
+                raw_data_name='greetings',
+                raw_data_value=wit_response['entities']['greetings'][0]['value'],
+                debug=SERVER['debug']
+            )
+            response_text = "Hola bienvenido a Eladata"
+            callback = 'location_trigger'
+        if question_context_tag == 'goodbye':
+            response_text = "Hasta luego"
         return jsonify({
             'query': text,
             'response': response_text,
-            'response_object': wit_response
+            'response_object': wit_response,
+            'callback': callback
         }), 200
     return jsonify({
         'query': None,

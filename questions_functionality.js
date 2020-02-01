@@ -22,8 +22,7 @@
 
     $(document).ready(function () {
         //check_event('location_trigger');
-        if ($('input.h4h_input_text').val() === '')
-            return false;
+
         $.ajax({
             url: BASE_URL+'/chatbox',
             success: function (response) {
@@ -32,6 +31,8 @@
             }
         });
         $('button.h4h_send_button').click(function(){
+            if ($('input.h4h_input_text').val() === '')
+                return false;
             $('div.h4h_messages').append($('<div>').addClass('h4h_message_user').text($('input.h4h_input_text').val()))
             $.ajax({
                     url: BASE_URL + '/talk',

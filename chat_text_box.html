@@ -1,62 +1,63 @@
 <style>
     #h4h_eladata_chatbox{
-        position: fixed;
-        bottom: 10px;
-        right: 10px;
-        width: 25vw;
-        height: 50vh;
-        border: 1px solid black;
-        border-radius: 15px;
+        position: fixed !important;
+        bottom: 10px !important;
+        right: 10px !important;
+        width: 25vw !important;
+        height: 50vh !important;
+        border: 1px solid black !important;
+        border-radius: 15px !important;
     }
     #h4h_eladata_chatbox div.h4h_header{
-        text-align: center;
-        height: 5vh;
-        border-bottom: 1px solid black;
+        text-align: center !important;
+        height: 5vh !important;
+        border-bottom: 1px solid black !important;
     }
 
     #h4h_eladata_chatbox div.h4h_form{
-        height: 5vh;
-        padding: 0 10px;
-        border-top: 1px solid black;
-        padding-top: 15px;
+        height: 7vh !important;
+        padding: 0 10px !important;
+        border-top: 1px solid black !important;
+        padding-top: 15px !important;
+        display: flex;
     }
 
     #h4h_eladata_chatbox div.h4h_messages{
-            height: 28vh;
-            max-height: 28vh;
-            padding: 20px 10px;
-            overflow-y: scroll;
+        height: 36vh !important;
+        max-height: 36vh !important;
+        padding: 20px 10px !important;
+        overflow-y: scroll !important;
     }
 
     #h4h_eladata_chatbox div.h4h_form input{
-        width: 70%;
-        padding: 8px;
-        font-size: 1em;
-        border-radius: 10px;
+        width: 70% !important;
+        padding: 8px !important;
+        font-size: 16px !important;
+        border-radius: 10px !important;
     }
     #h4h_eladata_chatbox div.h4h_form button{
-        width: 25%;
-        padding: 8px;
-        font-size: 1em;
-        border-radius: 10px;
+        width: 25% !important;
+        padding: 8px !important;
+        font-size: 16px !important;
+        border-radius: 10px !important;
     }
     #h4h_eladata_chatbox div.h4h_messages div{
-        margin-top: 10px;
-        padding: 5px;
-        width: 80%;
-        border: 1px solid black;
-        border-radius: 10px;
-        background-color: #d3ecb6;
+        margin-top: 10px !important;
+        padding: 5px !important;
+        width: 80% !important;
+        border: 1px solid black !important;
+        border-radius: 10px !important;
+        background-color: #d3ecb6 !important;
     }
     #h4h_eladata_chatbox div.h4h_messages div.h4h_message_user{
-        position: relative;
-        left: 15%;
-        background-color: #ece9bb;
+        position: relative !important;
+        left: 15% !important;
+        background-color: #ece9bb !important;
     }
 </style>
 <div id="h4h_eladata_chatbox">
     <div class="h4h_header">
-        <h3>Eladata BOT</h3>
+        <div>Eladata BOT</div>
     </div>
     <div class="h4h_messages">
     </div>
@@ -70,26 +71,15 @@
     function check_event(eventName) {
         $.ajax({
             url: BASE_URL + '/trigger/' + eventName,
-            success: function (response) {
-                var query = prompt(response.question);
-                $.ajax({
-                    url: BASE_URL + '/talk',
-                    method: 'POST',
-                    data: {
-                        'text': query
-                    },
-                    success: function (res) {
-                        window.alert(res.response);
-                        $('div.h4h_messages').append($('<div>').addClass('h4h_message_bot').text(res.response))
-                    }
-                });
+            success: function (res) {
+                $('div.h4h_messages').append($('<div>').addClass('h4h_message_bot').text(res.question))
             }
         });
     }
 
     $(document).ready(function () {
         //check_event('location_trigger');
-        if ($('input.h4h_input_text').val() === '')
+        /*if ($('.h4h_input_text').val() === '')
             return false;
         $.ajax({
             url: BASE_URL+'/chatbox',
@@ -97,20 +87,23 @@
                 $('body').append(response);
                 check_event('ela_question_1');
             }
-        });
-        $('button.h4h_send_button').click(function(){
-            $('div.h4h_messages').append($('<div>').addClass('h4h_message_user').text($('input.h4h_input_text').val()))
+        });*/
+        $('.h4h_send_button').click(function(){
+            $('div.h4h_messages').append($('<div>').addClass('h4h_message_user').text($('.h4h_input_text').val()))
             $.ajax({
                     url: BASE_URL + '/talk',
                     method: 'POST',
                     data: {
-                        'text': $('input.h4h_input_text').val()
+                        'text': $('.h4h_input_text').val()
                     },
                     success: function (res) {
                         $('div.h4h_messages').append($('<div>').addClass('h4h_message_bot').text(res.response))
-                        $('input.h4h_input_text').val('')
+                        $('input.h4h_input_text').val('');
+                        window.contex_tag = res.callback;
+                        check_event(res.callback);
                     }
                 });
         });
     });
+    check_event('location_trigger')
 </script>
