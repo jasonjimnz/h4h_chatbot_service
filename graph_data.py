@@ -9,7 +9,7 @@ class GraphInstance(object):
         MERGE (u:User {{ user_id: {user_id} }})
         MERGE (m:Message {{text: "{message}" }} )
         MERGE (rd: RawData {{ type: "{data_type}", name: "{name}", value: "{value}" }} )
-        MERGE (u)->[r:SENDS]->(m)-[r1:CONTAINS]->(rd)->[r2:RELATED_TO]->(u)
+        MERGE (u)-[r:SENDS]->(m)-[r1:CONTAINS]->(rd)-[r2:RELATED_TO]->(u)
         RETURN u,m,rd LIMIT 10
         """
     }
@@ -35,3 +35,16 @@ class GraphInstance(object):
         if debug:
             print(query)
         return session.run(query)
+
+    def add_message(self, session, user_id, message, raw_data_type, raw_data_name, raw_data_value, debug=False):
+        return self.run_query(
+            session,
+            self.queries['ADD_MESSAGE'].format(
+                user_id=user_id,
+                message=message,
+                data_type=raw_data_type,
+                name=raw_data_name,
+                value=raw_data_value
+            ),
+            debug
+        )
