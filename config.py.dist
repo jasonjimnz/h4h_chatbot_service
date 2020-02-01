@@ -1,0 +1,16 @@
+SERVER = {
+    'host': 'localhost',
+    'port': 5000,
+    'debug': True
+}
+
+WIT_AI = {
+    'API_KEY': 'YOUR_WIT_AI_API_KEY'
+}
+
+NEO4J = {
+    'host': 'localhost',
+    'port': 7687,
+    'user': 'neo4j',
+    'password': 'YOUR_NEO4J_PASSWORD'
+}
