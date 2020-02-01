@@ -44,5 +44,5 @@
                         $('input.h4h_input_text').val('')
                     }
                 });
-        })
+        });
     });
