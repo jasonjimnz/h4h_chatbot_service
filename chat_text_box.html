@@ -94,7 +94,8 @@
                     url: BASE_URL + '/talk',
                     method: 'POST',
                     data: {
-                        'text': $('.h4h_input_text').val()
+                        'text': $('.h4h_input_text').val(),
+                        'question_context_tag': window.contex_tag
                     },
                     success: function (res) {
                         $('div.h4h_messages').append($('<div>').addClass('h4h_message_bot').text(res.response))
